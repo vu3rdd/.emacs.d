@@ -2,6 +2,7 @@
 
 (require 'init-elpa)
 (require 'init-ui)
+(require 'init-misc)
 (require 'init-rust)
 
 (provide 'init)
