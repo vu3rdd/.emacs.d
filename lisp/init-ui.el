@@ -14,13 +14,14 @@
 (set-face-attribute 'default nil :height 140)
 (setq-default line-spacing 0.4)
 
+(global-linum-mode t)
+
 (setq
       x-select-enable-clipboard t
       x-select-enable-primary t
       save-interprogram-paste-before-kill t
       apropos-do-all t
       mouse-yank-at-point t
-      global-linum-mode t
       column-number-mode t)
 
 (load-theme 'atom-one-dark t)
