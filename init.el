@@ -13,6 +13,7 @@
 (require 'init-misc)
 (require 'init-rust)
 (require 'init-magit)
+(require 'init-haskell)
 
 (provide 'init)
 (custom-set-variables
@@ -22,7 +23,7 @@
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
    (quote
-    (magit smex projectile ido-ubiquitous golden-ratio flycheck-rust company cargo atom-one-dark-theme async))))
+    (haskell-mode magit smex projectile ido-ubiquitous golden-ratio flycheck-rust company cargo atom-one-dark-theme async))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
