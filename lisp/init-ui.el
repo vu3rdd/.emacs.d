@@ -33,4 +33,10 @@
 
 ;;(golden-ratio-mode 1)
 
+;; encoding
+(setq default-process-coding-system '(utf-8-unix . utf-8-unix))
+
+;; show matching parens
+(show-paren-mode 1)
+
 (provide 'init-ui)
