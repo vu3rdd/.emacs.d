@@ -14,6 +14,7 @@
 (require 'init-rust)
 (require 'init-magit)
 (require 'init-haskell)
+(require 'init-c)
 
 (provide 'init)
 (custom-set-variables
