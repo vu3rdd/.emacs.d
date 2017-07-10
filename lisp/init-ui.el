@@ -16,13 +16,14 @@
 
 (global-linum-mode t)
 
-(setq
-      x-select-enable-clipboard t
+(setq x-select-enable-clipboard t
       x-select-enable-primary t
       save-interprogram-paste-before-kill t
       apropos-do-all t
       mouse-yank-at-point t
-      column-number-mode t)
+      column-number-mode t
+      ns-command-modifier 'meta
+      initial-frame-alist '((fullscreen . maximized)))
 
 ;;(load-theme 'atom-one-dark t)
 
@@ -38,5 +39,8 @@
 
 ;; show matching parens
 (show-paren-mode 1)
+
+;; y-or-n instead of yes-or-no
+(defalias 'yes-or-no-p 'y-or-n-p)
 
 (provide 'init-ui)

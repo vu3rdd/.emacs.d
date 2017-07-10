@@ -1,6 +1,9 @@
 (require 'init-elpa)
 (require-package 'haskell-mode)
-;;(require-package 'company-ghc)
+
+;; (require-package 'intero)
+;; (add-hook 'haskell-mode-hook 'intero-mode)
+;; (intero-global-mode 1)
 
 (eval-after-load "haskell-mode"
   '(define-key haskell-mode-map [f8] 'haskell-navigate-imports))
@@ -22,12 +25,16 @@
  '(haskell-process-suggest-remove-import-lines t)
  '(haskell-process-auto-import-loaded-modes t)
  '(haskell-process-log t))
+;; '(haskell-process-type 'stack-ghci))
 
 ;; load file - M-x haskell-process-load-file, haskell-process-reload
 (eval-after-load "haskell-mode"
   '(progn
      '(define-key interactive-haskell-mode-map (kbd "M-.") 'haskell-mode-goto-loc)
      '(define-key interactive-haskell-mode-map (kbd "C-c C-t") 'haskel-mode-show-type-at)))
+
+;; stack or cabal-install? stack for now
+;;(setq haskell-compile-cabal-build-command "stack build")
 
 (eval-after-load "haskell-mode"
   '(progn
