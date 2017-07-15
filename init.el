@@ -22,9 +22,12 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(haskell-process-auto-import-loaded-modes t)
+ '(haskell-process-log t)
+ '(haskell-process-suggest-remove-import-lines t)
  '(package-selected-packages
    (quote
-    (haskell-mode magit smex projectile ido-ubiquitous golden-ratio flycheck-rust company cargo atom-one-dark-theme async))))
+    (exec-path-from-shell haskell-mode magit smex projectile ido-ubiquitous golden-ratio flycheck-rust company cargo atom-one-dark-theme async))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
