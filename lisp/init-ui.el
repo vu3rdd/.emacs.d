@@ -28,8 +28,8 @@
 ;;(load-theme 'atom-one-dark t)
 
 (blink-cursor-mode 0)
-(setq-default cursor-type 'bar)
-(set-cursor-color "#cccccc")
+(setq-default cursor-type '(bar . 2))
+(set-cursor-color "#ff0000")
 (setq ring-bell-function 'ignore)
 
 ;;(golden-ratio-mode 1)
