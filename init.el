@@ -15,6 +15,7 @@
 (require 'init-magit)
 (require 'init-haskell)
 (require 'init-c)
+(require 'init-erc)
 
 (provide 'init)
 (custom-set-variables
