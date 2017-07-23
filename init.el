@@ -7,6 +7,9 @@
 
 (add-to-list 'load-path (expand-file-name "lisp" user-emacs-directory))
 
+;; .el files not obtainable from pkg manager
+(add-to-list 'load-path (expand-file-name "elisp" user-emacs-directory))
+
 (require 'init-elpa)
 (require 'init-ui)
 (require 'init-navigation)
@@ -16,6 +19,7 @@
 (require 'init-haskell)
 (require 'init-c)
 (require 'init-erc)
+(require 'init-org)
 
 (provide 'init)
 (custom-set-variables
