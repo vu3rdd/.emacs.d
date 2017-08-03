@@ -17,9 +17,9 @@
          entry (file+datetree "~/org/journal.org")
          "* %T %?"
          :empty-lines 1)
-	("t" "TODO Entry"
-	 (file+headline "~/org/todo.org" "Tasks")
-	 "* TODO %?")
+	;; ("t" "TODO"
+	;;  entry (file+headline "~/org/todo.org" "Tasks")
+	;;  "* TODO %?")
 	))
 
 (provide 'init-org)
