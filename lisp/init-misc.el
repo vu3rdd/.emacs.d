@@ -15,4 +15,9 @@
   (when (memq window-system '(mac ns x))
   (exec-path-from-shell-initialize)))
 
+;; which key - type in partial keybinding to bring up a help text
+(require-package 'which-key)
+
+(which-key-mode)
+
 (provide 'init-misc)
