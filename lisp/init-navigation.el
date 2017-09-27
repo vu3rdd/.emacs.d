@@ -1,30 +1,33 @@
 (require 'init-elpa)
-(require 'ido)
 
-;;(require-package 'ido-ubiquitous)
-(require-package 'smex)
+(require-package 'ivy)
+(require-package 'counsel)
+(require-package 'swiper)
 (require-package 'projectile)
+(require-package 'counsel-projectile)
 
-(setq ido-enable-flex-matching t)
-(setq ido-everywhere t)
-(ido-mode 1)
+(require 'ivy)
 
-(setq ido-use-filename-at-point nil)
-(setq ido-auto-merge-work-directories-length -1)
-(setq ido-use-virtual-buffers t)
+;; enable ivy everywhere
+(ivy-mode 1)
 
-;;(ido-ubiquitous-mode 1)
-
-;; Shows a list of buffers
-(global-set-key (kbd "C-x C-b") 'ibuffer)
-
-(setq smex-save-file (concat user-emacs-directory ".smex-items"))
-(smex-initialize)
-(global-set-key (kbd "M-x") 'smex)
+(setq ivy-use-virtual-buffers t)
+(setq ivy-count-format "(%d/%d) ")
 
 (projectile-global-mode)
+(setq projectile-completion-system 'ivy)
+(counsel-projectile-on)
 
 ;; Enable move point from window to window using Shift and the arrow keys
-(windmove-default-keybindings)
+;; (windmove-default-keybindings)
+
+(global-set-key (kbd "C-s") 'swiper)
+(global-set-key (kbd "M-x") 'counsel-M-x)
+(global-set-key (kbd "C-x C-f") 'counsel-find-file)
+(global-set-key (kbd "<f1> f") 'counsel-describe-function)
+(global-set-key (kbd "<f1> v") 'counsel-describe-variable)
+(global-set-key (kbd "<f1> l") 'counsel-find-library)
+(global-set-key (kbd "<f2> i") 'counsel-info-lookup-symbol)
+(global-set-key (kbd "<f2> u") 'counsel-unicode-char)
 
 (provide 'init-navigation)
