@@ -1,5 +1,6 @@
 (require 'init-elpa)
 (require-package 'haskell-mode)
+(require-package 'company-ghci)
 
 ;; (require-package 'intero)
 ;; (add-hook 'haskell-mode-hook 'intero-mode)
@@ -45,5 +46,11 @@
      '(define-key haskell-mode-map (kbd "C-c C-c") 'haskell-process-cabal-build)
      '(define-key haskell-mode-map (kbd "C-c C-k") 'haskell-interactive-mode-clear)
      '(define-key haskell-mode-map (kbd "C-c c") 'haskell-process-cabal)))
+
+;; company-ghci
+(push 'company-ghci company-backends)
+(add-hook 'haskell-mode-hook 'company-mode)
+;;; To get completions in the REPL
+(add-hook 'haskell-interactive-mode-hook 'company-mode)
 
 (provide 'init-haskell)
