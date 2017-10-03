@@ -1,5 +1,6 @@
 (require 'init-elpa)
 (require-package 'haskell-mode)
+(require-package 'company)
 (require-package 'company-ghci)
 
 ;; (require-package 'intero)
@@ -50,7 +51,14 @@
 ;; company-ghci
 (push 'company-ghci company-backends)
 (add-hook 'haskell-mode-hook 'company-mode)
+
+(add-hook 'haskell-mode-hook
+          (lambda ()
+            (set (make-local-variable 'company-backends)
+                 (append '((company-capf company-dabbrev-code))
+                         company-backends))))
+
 ;;; To get completions in the REPL
-(add-hook 'haskell-interactive-mode-hook 'company-mode)
+;;(add-hook 'haskell-interactive-mode-hook 'company-mode)
 
 (provide 'init-haskell)

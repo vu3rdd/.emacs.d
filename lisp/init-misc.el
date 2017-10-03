@@ -1,6 +1,7 @@
 (setq make-backup-files nil)
 
 (require-package 'exec-path-from-shell)
+(require-package 'company)
 
 ;; global key binding for align-regexp
 (global-set-key (kbd "C-x a r") 'align-regexp)
@@ -19,5 +20,8 @@
 (require-package 'which-key)
 
 (which-key-mode)
+
+;; company in all buffers
+(add-hook 'after-init-hook 'global-company-mode)
 
 (provide 'init-misc)
