@@ -1,0 +1,14 @@
+* key bindings
+** Projectile mode
+
+C-c p f - file file
+C-c p c - build project
+C-c p t - toggle build/test
+
+`which-key` mode is installed, so partially typing a key and waiting for auto
+completion would also work.
+
+** general
+
+M-. - find definition
+M-, - return to previous location
