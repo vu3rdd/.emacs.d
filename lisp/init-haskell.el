@@ -2,10 +2,18 @@
 (require-package 'haskell-mode)
 (require-package 'company)
 (require-package 'company-ghci)
+(require-package 'dante)
 
 ;; (require-package 'intero)
 ;; (add-hook 'haskell-mode-hook 'intero-mode)
 ;; (intero-global-mode 1)
+
+;; dante
+(add-hook 'haskell-mode-hook 'dante-mode)
+(add-hook 'dante-mode-hook
+          '(lambda ()
+             (flycheck-add-next-checker 'haskell-dante
+                                        '(warning . haskell-hlint))))
 
 (eval-after-load "haskell-mode"
   '(define-key haskell-mode-map [f8] 'haskell-navigate-imports))
