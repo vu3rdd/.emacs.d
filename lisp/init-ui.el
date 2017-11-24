@@ -43,4 +43,7 @@
 ;; y-or-n instead of yes-or-no
 (defalias 'yes-or-no-p 'y-or-n-p)
 
+;; font
+(set-frame-font "Source Code Pro-11" nil t)
+
 (provide 'init-ui)

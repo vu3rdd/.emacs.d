@@ -10,5 +10,7 @@ completion would also work.
 
 ** general
 
-M-. - find definition
-M-, - return to previous location
+M-.     - find definition
+M-,     - return to previous location
+C-c .   - show type for the expression at the cursor
+C-c C-c - compile
