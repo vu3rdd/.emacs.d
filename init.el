@@ -20,6 +20,7 @@
 (require 'init-c)
 (require 'init-erc)
 (require 'init-org)
+(require 'init-idris)
 
 (provide 'init)
 (custom-set-variables
