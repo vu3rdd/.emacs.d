@@ -1,6 +1,7 @@
 (require 'init-elpa)
 
 (require-package 'helm)
+; (require-package 'counsel)
 (require-package 'projectile)
 
 (require 'helm-config)
@@ -12,7 +13,7 @@
 
 (projectile-global-mode)
 (setq projectile-completion-system 'ivy)
-(counsel-projectile-on)
+;;(counsel-projectile-on)
 
 ;; Enable move point from window to window using Shift and the arrow keys
 ;; (windmove-default-keybindings)

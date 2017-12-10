@@ -44,6 +44,6 @@
 (defalias 'yes-or-no-p 'y-or-n-p)
 
 ;; font
-(set-frame-font "Source Code Pro-11" nil t)
+(set-frame-font "Inconsolata-12" nil t)
 
 (provide 'init-ui)
