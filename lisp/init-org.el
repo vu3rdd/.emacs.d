@@ -37,6 +37,11 @@
          entry
          (file+headline org-default-notes-file "Tasks")
          "* TODO %?\n %i\n %a") ;; template
+        ("l"
+         "Links to interesting posts"
+         entry
+         (file+datetree (concat org-directory "/links.org"))
+         "* %T %?")
 	))
 
 (provide 'init-org)
