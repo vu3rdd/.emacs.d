@@ -20,4 +20,10 @@
 
 (global-set-key (kbd "C-x C-b") 'ibuffer)
 
+(require-package 'neotree)
+
+(require 'neotree)
+(global-set-key [f8] 'neotree-toggle)
+(setq neo-theme (if (display-graphic-p) 'icons 'arrow))
+
 (provide 'init-navigation)

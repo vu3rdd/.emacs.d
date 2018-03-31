@@ -44,4 +44,9 @@
          "* %T %?")
 	))
 
+(require-package 'org-journal)
+(require 'org-journal)
+(setq org-journal-dir "~/projects/journal/")
+(setq org-journal-file-format "%Y-%m-%d.org")
+
 (provide 'init-org)
