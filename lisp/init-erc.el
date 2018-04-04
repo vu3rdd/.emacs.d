@@ -5,7 +5,7 @@
 
 (erc-autojoin-mode t)
 (setq erc-autojoin-channels-alist
-      '((".*\\.freenode.net" "#haskell-beginners" "#tahoe-lafs")
+      '((".*\\.freenode.net" "#tahoe-lafs" "#magic-wormhole")
         ;; (".*\\.oftc.net" "#leastauthority")
         ;; (".*\\.mozilla.org" "#rust-beginners")
         ))

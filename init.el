@@ -18,6 +18,7 @@
 (require 'init-magit)
 (require 'init-haskell)
 (require 'init-c)
+(require 'init-go)
 (require 'init-erc)
 (require 'init-org)
 (require 'init-idris)
@@ -33,7 +34,8 @@
  '(haskell-process-suggest-remove-import-lines t)
  '(package-selected-packages
    (quote
-    (dante helm company-ghci which-key counsel-projectile counsel exec-path-from-shell haskell-mode magit smex projectile ido-ubiquitous golden-ratio flycheck-rust company cargo atom-one-dark-theme async))))
+    (nov dumb-jump go-mode exec-path-from-shell haskell-mode magit smex projectile ido-ubiquitous golden-ratio flycheck-rust company cargo atom-one-dark-theme async))))
+
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.

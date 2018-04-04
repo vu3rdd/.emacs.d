@@ -43,7 +43,10 @@
 ;; y-or-n instead of yes-or-no
 (defalias 'yes-or-no-p 'y-or-n-p)
 
-;; font
-(set-frame-font "Inconsolata-12" nil t)
+;; highlight current line
+(global-hl-line-mode 1)
+
+;; turn off colours in terminal mode
+(add-to-list 'default-frame-alist '(tty-color-mode . -1))
 
 (provide 'init-ui)

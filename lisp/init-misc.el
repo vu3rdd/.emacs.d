@@ -18,10 +18,16 @@
 
 ;; which key - type in partial keybinding to bring up a help text
 (require-package 'which-key)
-
 (which-key-mode)
 
 ;; company in all buffers
 (add-hook 'after-init-hook 'global-company-mode)
+
+(require-package 'dumb-jump)
+(dumb-jump-mode)
+
+;; epub reader
+(require-package 'nov)
+(add-to-list 'auto-mode-alist '("\\.epub\\'" . nov-mode))
 
 (provide 'init-misc)
