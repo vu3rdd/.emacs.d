@@ -22,6 +22,7 @@
 (require 'init-erc)
 (require 'init-org)
 (require 'init-idris)
+(require 'init-ocaml)
 
 (provide 'init)
 (custom-set-variables
@@ -34,7 +35,7 @@
  '(haskell-process-suggest-remove-import-lines t)
  '(package-selected-packages
    (quote
-    (nov dumb-jump go-mode exec-path-from-shell haskell-mode magit smex projectile ido-ubiquitous golden-ratio flycheck-rust company cargo atom-one-dark-theme async))))
+    (merlin tuareg nov dumb-jump go-mode exec-path-from-shell haskell-mode magit smex projectile ido-ubiquitous golden-ratio flycheck-rust company cargo atom-one-dark-theme async))))
 
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
