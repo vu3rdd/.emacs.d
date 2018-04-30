@@ -48,5 +48,5 @@
 (require 'org-journal)
 (setq org-journal-dir "~/projects/journal/")
 (setq org-journal-file-format "%Y-%m-%d.org")
-
+(setq org-journal-enable-agenda-integration t)
 (provide 'init-org)
