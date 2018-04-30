@@ -5,7 +5,7 @@
 
 (erc-autojoin-mode t)
 (setq erc-autojoin-channels-alist
-      '((".*\\.freenode.net" "#tahoe-lafs" "#magic-wormhole")
+      '((".*\\.freenode.net" "#tahoe-lafs" "#magic-wormhole" "plan9chan")
         ;; (".*\\.oftc.net" "#leastauthority")
         ;; (".*\\.mozilla.org" "#rust-beginners")
         ))
