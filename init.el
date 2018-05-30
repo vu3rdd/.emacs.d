@@ -69,6 +69,10 @@
 (set-cursor-color "#ff0000")
 (setq ring-bell-function 'ignore)
 
+;; theme
+(add-to-list 'custom-theme-load-path "~/.emacs.d/themes")
+(load-theme 'acme t)
+
 ;; encoding
 (setq default-process-coding-system '(utf-8-unix . utf-8-unix))
 
