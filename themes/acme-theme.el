@@ -43,11 +43,11 @@
 
 (let ((fg "#111111")
       (fg-table "#222291")
-      (bg "#ffffea") ;; "#fffff8")
+      (bg "#ffffea")
       (bg-light "#ddddd8")
       (bg-modeline "#aeeeee")
       (fg-light "#ddddd8")
-      (bg-highlight "#FFF1AA")
+      (bg-highlight "#FFFFCA")
       (bg-highlight-2 "LightCyan")
       (bg-highlight-3 "LightGreen"))
 
@@ -67,11 +67,11 @@
    `(font-latex-string-face ((t (:foreground "#a9a9a9"))))
    `(font-lock-builtin-face ((t (:background ,bg :foreground ,fg))))
    `(font-lock-comment-delimiter-face ((t (:foreground "#808080"))))
-   `(font-lock-comment-face ((t (:foreground ,fg :weight bold))))
+   `(font-lock-comment-face ((t (:foreground ,fg :weight bold :slant italic))))
    `(font-lock-constant-face ((t (:foreground ,fg))))
    `(font-lock-doc-face ((t (:foreground ,fg :weight semi-bold))))
-   `(font-lock-function-name-face ((t (:foreground ,fg))))
-   `(font-lock-keyword-face ((t (:foreground ,fg))))
+   `(font-lock-function-name-face ((t (:foreground ,fg :weight bold))))
+   `(font-lock-keyword-face ((t (:foreground ,fg :slant italic))))
    `(font-lock-preprocessor-face ((t (:foreground ,fg))))
    `(font-lock-reference-face ((t (:foreground ,fg))))
    `(font-lock-string-face ((t (:foreground ,fg))))
@@ -187,12 +187,12 @@
    `(company-tooltip-selection ((t (:background ,bg-highlight))))
 
    ;; parens - parenface
-   '(parenface-paren-face ((t (:foreground "gray70"))))
-   '(parenface-curly-face ((t (:foreground "gray70"))))
-   '(parenface-bracket-face ((t (:foreground "gray70"))))
+   '(parenface-paren-face ((t (:foreground "blue"))))
+   '(parenface-curly-face ((t (:foreground "blue"))))
+   '(parenface-bracket-face ((t (:foreground "blue"))))
 
    ;; parens - paren-face
-   '(parenthesis ((t (:foreground "gray70"))))
+   '(parenthesis ((t (:foreground "blue"))))
 
    ;; parens - other
    `(sp-show-pair-match-face ((t (:foreground "black" :weight bold))))
@@ -230,7 +230,7 @@
    `(yas-field-highlight-face ((t (:background "#eeeee8" :foreground ,fg))))
    `(eshell-prompt ((t (:foreground ,fg :weight bold))))
    `(cider-result-overlay-face ((t (:weight bold))))
-   `(hl-line ((t (:background ,bg-highlight)))) ;;; "#ece3b7")))) ;; "#fcfaf0" ))))
+   `(hl-line ((t (:background ,bg-highlight))))
    `(Shadow ((t (:foreground "grey75"))))
    `(idle-highlight ((t (:background ,bg-highlight))))
    
