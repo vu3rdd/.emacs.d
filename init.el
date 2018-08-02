@@ -179,10 +179,17 @@
 ;;; erc
 (use-package tls)
 (use-package erc
+  :init
+  (load "~/secrets/ercpass.el")
+  (require 'erc-services)
+  (erc-services-mode 1)
   :config
   (erc-autojoin-mode)
+  (setq erc-prompt-for-nickserv-password nil)
+  (setq erc-nickserv-passwords
+        `((freenode     (("rkrishnan" . ,freenode-rkrishnan-pass)))))
   (setq erc-autojoin-channels-alist
-        '((".*\\.freenode.net" "#haskell" "#tahoe-lafs" "#magic-wormhole")
+        '(;; (".*\\.freenode.net" "#haskell" "#tahoe-lafs" "#magic-wormhole")
           ;; (".*\\.oftc.net" "#leastauthority")
           ;; (".*\\.mozilla.org" "#rust-beginners")
           ))
@@ -196,8 +203,9 @@
     "Connect to IRC."
     (interactive)
     (when (y-or-n-p "Do you want to start IRC? ")
+      (erc-tls :server "rkrishnan.org" :port 6697 :nick "rkrishnan" :password znc-pass)))
       ;; (erc-tls :server "irc.mozilla.org" :port 6697 :nick "rkrishnan" :full-name "Ramakrishnan Muthukrishnan")
-      (erc-tls :server "irc.freenode.net" :port 6697 :nick "rkrishnan" :full-name "Ramakrishnan Muthukrishnan")))
+      ;; (erc-tls :server "irc.freenode.net" :port 6697 :nick "rkrishnan" :full-name "Ramakrishnan Muthukrishnan")))
   ;; (erc-tls :server "irc.oftc.net" :port 6697 :nick "rkrishnan" :full-name "Ramakrishnan Muthukrishnan")))
   :bind
   ("C-c e" . start-erc))
