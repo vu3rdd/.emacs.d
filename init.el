@@ -149,18 +149,52 @@
                (electric-pair-mode 1))))
 
 ;;;  magit
-(use-package magit)
+(use-package magit
+  :init
+  (global-set-key (kbd "C-x g") 'magit-status))
+
 
 ;;; haskell
 (use-package haskell-mode)
+(use-package flymake)
 
-(use-package dante
-  :after haskell-mode
-  :commands 'dante-mode
+;; (use-package dante
+;;   :ensure t
+;;   :after haskell-mode
+;;   :commands 'dante-mode
+;;   :init
+;;   (add-hook 'haskell-mode-hook 'flycheck-mode)
+;;   (add-hook 'haskell-mode-hook 'dante-mode)
+;;   (setq dante-repl-command-line '("cabal" "repl" dante-target "--builddir=dist/dante")))
+
+(setq flycheck-check-syntax-automatically '(save mode-enabled))
+
+;; LSP
+(use-package flycheck
+  :ensure t
   :init
-  (add-hook 'haskell-mode-hook 'dante-mode)
-  (add-hook 'haskell-mode-hook 'flycheck-mode)
-  (setq dante-repl-command-line '("cabal" "new-repl" dante-target "--builddir=dist/dante")))
+  (global-flycheck-mode t))
+
+(use-package yasnippet
+  :ensure t)
+
+(use-package lsp-mode
+  :ensure t
+  :hook (haskell-mode . lsp)
+  :commands lsp)
+
+(use-package lsp-ui
+  :ensure t
+  :commands lsp-ui-mode)
+
+(use-package lsp-haskell
+ :ensure t
+ :config
+ (setq lsp-haskell-process-path-hie "ghcide")
+ (setq lsp-haskell-process-args-hie '())
+ ;; Comment/uncomment this line to see interactions between lsp client/server.
+ (setq lsp-log-io t)
+)
 
 ;;; C
 (setq c-default-style "linux"
@@ -270,6 +304,26 @@
 ;;; ocaml
 (use-package tuareg)
 
+;;; org mode based presentations
+(use-package org-tree-slide
+  :requires org
+  :config
+  (when (require 'org-tree-slide nil t)
+    (global-set-key (kbd "<f8>") 'org-tree-slide-mode)
+    (global-set-key (kbd "S-<f8>") 'org-tree-slide-skip-done-toggle)))
+
+;; eshell
+(setenv "TERM" "dumb")
+(use-package helm-eshell
+  :init
+  (add-hook 'eshell-mode-hook
+            (lambda ()
+              (eshell-cmpl-initialize)
+              (define-key eshell-mode-map [remap eshell-pcomplete] 'helm-esh-pcomplete)
+              (define-key eshell-mode-map (kbd "M-s f") 'helm-eshell-prompts-all)))
+  :config
+  (define-key eshell-mode-map (kbd "M-r") 'helm-eshell-history))
+
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -277,7 +331,7 @@
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
    (quote
-    (tuareg idris-mode org-journal go-mode dante haskell-mode magit cargo flycheck-rust flycheck racer nov dumb-jump which-key company exec-path-from-shell projectile use-package))))
+    (org-tree-slide tuareg idris-mode org-journal go-mode dante haskell-mode magit cargo flycheck-rust flycheck racer nov dumb-jump which-key company exec-path-from-shell projectile use-package))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
