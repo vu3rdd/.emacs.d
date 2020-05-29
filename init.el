@@ -157,7 +157,9 @@
 ;;;  magit
 (use-package magit
   :init
-  (global-set-key (kbd "C-x g") 'magit-status))
+  (global-set-key (kbd "C-x g") 'magit-status)
+  :config
+  (setq magit-diff-refine-hunk 'all))
 
 
 ;;; haskell
