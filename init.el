@@ -72,6 +72,14 @@
 ;;; font
 (set-default-font "DejaVu Sans Mono-11")
 
+;; python mode
+(defun my-python-hook ()
+  (define-key python-mode-map (kbd "RET") 'newline-and-indent))
+
+(add-hook 'python-mode-hook 'my-python-hook)
+(add-hook 'python-mode-hook 'electric-indent-mode)
+
+
 ;; theme
 (add-to-list 'custom-theme-load-path "~/.emacs.d/themes")
 (load-theme 'acme t)
@@ -143,7 +151,6 @@
 ;;; rust mode
 (use-package racer)
 (use-package flycheck)
-(use-package flycheck-rust)
 (use-package cargo)
 (use-package rust-mode
   :init
@@ -160,29 +167,29 @@
 ;;;  magit
 (use-package magit
   :init
-  (global-set-key (kbd "C-x g") 'magit-status))
+  (global-set-key (kbd "C-x g") 'magit-status)
+  :config
+  (setq magit-diff-refine-hunk 'all))
 
 
 ;;; haskell
 (use-package haskell-mode)
 (use-package flymake)
 
-;; (use-package dante
-;;   :ensure t
-;;   :after haskell-mode
-;;   :commands 'dante-mode
-;;   :init
-;;   (add-hook 'haskell-mode-hook 'flycheck-mode)
-;;   (add-hook 'haskell-mode-hook 'dante-mode)
-;;   (setq dante-repl-command-line '("cabal" "repl" dante-target "--builddir=dist/dante")))
-
-(setq flycheck-check-syntax-automatically '(save mode-enabled))
-
-;; LSP
-(use-package flycheck
+(use-package attrap
   :ensure t
+  :bind (("C-x /" . attrap-attrap)))
+
+(use-package dante
+  :ensure t
+  :after haskell-mode
+  :commands 'dante-mode
   :init
-  (global-flycheck-mode t))
+  (add-hook 'haskell-mode-hook 'flycheck-mode)
+  (add-hook 'haskell-mode-hook 'dante-mode)
+  :config
+  (flycheck-add-next-checker 'haskell-dante '(info . haskell-hlint))
+  (setq dante-repl-command-line '("cabal" "repl" dante-target "--builddir=dist/dante")))
 
 (use-package yasnippet
   :ensure t)
@@ -323,7 +330,8 @@
 
 ;; eshell
 (setenv "TERM" "dumb")
-(use-package helm-eshell
+(use-package helm
+  :requires eshell
   :init
   (add-hook 'eshell-mode-hook
             (lambda ()
