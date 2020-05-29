@@ -320,7 +320,8 @@
 
 ;; eshell
 (setenv "TERM" "dumb")
-(use-package helm-eshell
+(use-package helm
+  :requires eshell
   :init
   (add-hook 'eshell-mode-hook
             (lambda ()
