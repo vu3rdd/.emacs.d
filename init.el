@@ -69,6 +69,13 @@
 (set-cursor-color "#ff0000")
 (setq ring-bell-function 'ignore)
 
+;; python mode
+(defun my-python-hook ()
+  (define-key python-mode-map (kbd "RET") 'newline-and-indent))
+
+(add-hook 'python-mode-hook 'my-python-hook)
+(add-hook 'python-mode-hook 'electric-indent-mode)
+
 ;; theme
 (add-to-list 'custom-theme-load-path "~/.emacs.d/themes")
 (load-theme 'acme t)
