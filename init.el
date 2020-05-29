@@ -166,22 +166,20 @@
 (use-package haskell-mode)
 (use-package flymake)
 
-;; (use-package dante
-;;   :ensure t
-;;   :after haskell-mode
-;;   :commands 'dante-mode
-;;   :init
-;;   (add-hook 'haskell-mode-hook 'flycheck-mode)
-;;   (add-hook 'haskell-mode-hook 'dante-mode)
-;;   (setq dante-repl-command-line '("cabal" "repl" dante-target "--builddir=dist/dante")))
-
-(setq flycheck-check-syntax-automatically '(save mode-enabled))
-
-;; LSP
-(use-package flycheck
+(use-package attrap
   :ensure t
+  :bind (("C-x /" . attrap-attrap)))
+
+(use-package dante
+  :ensure t
+  :after haskell-mode
+  :commands 'dante-mode
   :init
-  (global-flycheck-mode t))
+  (add-hook 'haskell-mode-hook 'flycheck-mode)
+  (add-hook 'haskell-mode-hook 'dante-mode)
+  :config
+  (flycheck-add-next-checker 'haskell-dante '(info . haskell-hlint))
+  (setq dante-repl-command-line '("cabal" "repl" dante-target "--builddir=dist/dante")))
 
 (use-package yasnippet
   :ensure t)
