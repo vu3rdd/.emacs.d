@@ -118,6 +118,12 @@
 
 (use-package nov
   :init
+  (setq nov-text-width 80)
+  (setq visual-fill-column-center-text t)
+  (defun my-nov-font-setup ()
+    (face-remap-add-relative 'variable-pitch :family "Liberation Serif-14"
+                             :height 1.0))
+  (add-hook 'nov-mode-hook 'my-nov-font-setup)
   (add-to-list 'auto-mode-alist '("\\.epub$" . nov-mode)))
 
 ;; global key binding for align-regexp
