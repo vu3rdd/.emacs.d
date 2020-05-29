@@ -141,7 +141,6 @@
 ;;; rust mode
 (use-package racer)
 (use-package flycheck)
-(use-package flycheck-rust)
 (use-package cargo)
 (use-package rust-mode
   :init
