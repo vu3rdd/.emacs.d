@@ -69,6 +69,9 @@
 (set-cursor-color "#ff0000")
 (setq ring-bell-function 'ignore)
 
+;;; font
+(set-default-font "DejaVu Sans Mono-11")
+
 ;; theme
 (add-to-list 'custom-theme-load-path "~/.emacs.d/themes")
 (load-theme 'acme t)
