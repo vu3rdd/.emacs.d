@@ -81,8 +81,11 @@
 
 
 ;; theme
-(add-to-list 'custom-theme-load-path "~/.emacs.d/themes")
-(load-theme 'acme t)
+;; (add-to-list 'custom-theme-load-path "~/.emacs.d/themes")
+;; (use-package color-theme-sanityinc-tomorrow
+;;   :config
+;;   (color-theme-sanityinc-tomorrow-day))
+;; (load-theme 'acme t)
 
 ;; encoding
 (setq default-process-coding-system '(utf-8-unix . utf-8-unix))
@@ -194,24 +197,6 @@
 (use-package yasnippet
   :ensure t)
 
-(use-package lsp-mode
-  :ensure t
-  :hook (haskell-mode . lsp)
-  :commands lsp)
-
-(use-package lsp-ui
-  :ensure t
-  :commands lsp-ui-mode)
-
-(use-package lsp-haskell
- :ensure t
- :config
- (setq lsp-haskell-process-path-hie "ghcide")
- (setq lsp-haskell-process-args-hie '())
- ;; Comment/uncomment this line to see interactions between lsp client/server.
- (setq lsp-log-io t)
-)
-
 ;;; C
 (setq c-default-style "linux"
       c-basic-offset 4)
@@ -314,6 +299,8 @@
   (setq org-journal-file-format "%Y-%m-%d.org")
   (setq org-journal-enable-agenda-integration t))
 
+(use-package restclient)
+
 ;; idris
 (use-package idris-mode)
 
@@ -350,17 +337,32 @@
 ;; michelson mode
 (use-package deferred)
 
+;; c# mode
+(use-package csharp-mode)
+
+;; mononoki font
+;; default to mononoki
+(set-face-attribute 'default nil
+		    :family "mononoki"
+		    :height 120
+		    :weight 'normal
+		    :width  'normal)
+
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(org-agenda-files (quote ("~/src/org/todo.org")))
  '(package-selected-packages
    (quote
-    (org-tree-slide tuareg idris-mode org-journal go-mode dante haskell-mode magit cargo flycheck-rust flycheck racer nov dumb-jump which-key company exec-path-from-shell projectile use-package))))
+    (color-theme-sanityinc-tomorrow csharp-mode agda-mode restclient rest-client attrap deferred nix-mode org-tree-slide tuareg idris-mode org-journal go-mode dante haskell-mode magit cargo flycheck-rust flycheck racer nov dumb-jump which-key company exec-path-from-shell projectile use-package))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  )
+
+(load-file (let ((coding-system-for-read 'utf-8))
+                (shell-command-to-string "agda-mode locate")))
