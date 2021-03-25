@@ -1,10 +1,13 @@
 ;;; emacs-lisp
-(package-initialize)
+;; no longer needed on emacs27
+;;(package-initialize)
 
 (add-to-list 'load-path (expand-file-name "lisp" user-emacs-directory))
 
 ;; .el files not obtainable from pkg manager
 (add-to-list 'load-path (expand-file-name "elisp" user-emacs-directory))
+
+(load "~/.emacs.d/early-init.el")
 
 ;; (require 'init-elpa)
 (require 'package)
@@ -17,6 +20,9 @@
       (unless (assoc package package-archive-contents)
 	(package-refresh-contents))
       (package-install package))))
+
+(add-to-list 'package-archives
+             '("melpa-stable" . "https://stable.melpa.org/packages/") t)
 
 (add-to-list 'package-archives
 	     '("melpa" . "https://melpa.org/packages/"))
@@ -45,16 +51,6 @@
       auto-save-interval 200            ; number of keystrokes between auto-saves (default: 300)
       )
 
-;;; ui bits
-(setq inhibit-startup-message t)
-(menu-bar-mode -1)
-(when (fboundp 'tool-bar-mode)
-  (tool-bar-mode -1))
-(when (fboundp 'scroll-bar-mode)
-  (scroll-bar-mode -1))
-
-(global-linum-mode t)
-
 (setq x-select-enable-clipboard t
       x-select-enable-primary t
       save-interprogram-paste-before-kill t
@@ -62,7 +58,7 @@
       mouse-yank-at-point t
       column-number-mode t
       ns-command-modifier 'meta
-      initial-frame-alist '((fullscreen . maximized)))
+    initial-frame-alist '((fullscreen . maximized)))
 
 (blink-cursor-mode 0)
 (setq-default cursor-type '(bar . 2))
@@ -82,9 +78,6 @@
 
 ;; theme
 ;; (add-to-list 'custom-theme-load-path "~/.emacs.d/themes")
-;; (use-package color-theme-sanityinc-tomorrow
-;;   :config
-;;   (color-theme-sanityinc-tomorrow-day))
 ;; (load-theme 'acme t)
 
 ;; encoding
@@ -117,7 +110,11 @@
 
 (use-package company
   :init
-  (add-hook 'after-init-hook 'global-company-mode))
+  (add-hook 'after-init-hook 'global-company-mode)
+  :config
+  (setq company-minimum-prefix-length 1
+        company-idle-delay 0.2) ;; default is 0.2
+  )
 
 (use-package which-key
   :config
@@ -129,19 +126,20 @@
 
 (use-package nov
   :init
-  (setq nov-text-width 80)
-  (setq visual-fill-column-center-text t)
+  (add-to-list 'auto-mode-alist '("\\.epub$" . nov-mode))
+  :config
+  ;; (setq nov-text-width 80)
   (defun my-nov-font-setup ()
-    (face-remap-add-relative 'variable-pitch :family "Liberation Serif-14"
+    (face-remap-add-relative 'variable-pitch :family "Liberation Serif"
                              :height 1.0))
-  (add-hook 'nov-mode-hook 'my-nov-font-setup)
-  (add-to-list 'auto-mode-alist '("\\.epub$" . nov-mode)))
+  (add-hook 'nov-mode-hook 'my-nov-font-setup))
 
 ;; global key binding for align-regexp
 (global-set-key (kbd "C-x a r") 'align-regexp)
 
 ;; disable tabs for indentation
 (setq-default indent-tabs-mode nil)
+(setq tab-width 2)
 
 ;; alias man to w.o.man
 (defalias 'man 'woman)
@@ -151,17 +149,20 @@
     (exec-path-from-shell-initialize)
     (setq exec-path-from-shell-check-startup-files nil)))
 
+(use-package flycheck
+  :ensure t
+  :init
+  (global-flycheck-mode t))
+(use-package yasnippet
+  :ensure t)
+
 ;;; rust mode
-(use-package racer)
-(use-package flycheck)
 (use-package cargo)
 (use-package rust-mode
   :init
   (add-hook 'rust-mode-hook  #'company-mode)
-  (add-hook 'rust-mode-hook  #'racer-mode)
   (add-hook 'racer-mode-hook #'eldoc-mode)
   (add-hook 'rust-mode-hook 'cargo-minor-mode)
-  (add-hook 'flycheck-mode-hook #'flycheck-rust-setup)
   (add-hook 'rust-mode-hook
             '(lambda ()
                (local-set-key (kbd "TAB") #'company-indent-or-complete-common)
@@ -176,26 +177,61 @@
 
 
 ;;; haskell
-(use-package haskell-mode)
-(use-package flymake)
+;; (use-package flycheck-haskell
+;;   :init
+;;   (add-hook 'haskell-mode-hook #'flycheck-haskell-setup))
 
-(use-package attrap
+(use-package lsp-mode
   :ensure t
-  :bind (("C-x /" . attrap-attrap)))
-
-(use-package dante
-  :ensure t
-  :after haskell-mode
-  :commands 'dante-mode
   :init
-  (add-hook 'haskell-mode-hook 'flycheck-mode)
-  (add-hook 'haskell-mode-hook 'dante-mode)
-  :config
-  (flycheck-add-next-checker 'haskell-dante '(info . haskell-hlint))
-  (setq dante-repl-command-line '("cabal" "repl" dante-target "--builddir=dist/dante")))
+  (setq lsp-keymap-prefix "C-c l")
+  :hook ((haskell-mode . (lsp lsp-deferred))
+         (go-mode . lsp)
+         (lsp-mode . lsp-enable-which-key-integration))
+  :commands (lsp lsp-deferred))
 
-(use-package yasnippet
-  :ensure t)
+(use-package lsp-ui
+  :ensure t
+  :after (lsp-mode)
+  :hook ((lsp-mode . lsp-ui-mode)
+         (lsp-mode . flycheck-mode))
+  :config
+  (setq lsp-prefer-flymake nil)
+  :commands lsp-ui-mode)
+
+(use-package haskell-mode
+  :ensure t
+  :init
+  (progn
+    (add-hook 'haskell-mode-hook 'turn-on-haskell-doc-mode)
+    (add-hook 'haskell-mode-hook 'turn-on-haskell-indent)
+    (add-hook 'haskell-mode-hook 'interactive-haskell-mode)
+    (setq haskell-process-args-cabal-new-repl
+	  '("--ghc-options=-ferror-spans -fshow-loaded-modules"))
+    (setq haskell-process-type 'cabal-new-repl)
+    ;; (setq haskell-stylish-on-save 't)
+    (setq haskell-mode-stylish-haskell-path "ormolu")
+    (setq haskell-tags-on-save 't)
+    ))
+
+(require 'lsp)
+(use-package lsp-haskell
+ :ensure t
+ :config
+ (setq lsp-haskell-process-path-hie "haskell-language-server-wrapper")
+ (setq lsp-log-io t)
+ )
+
+;; (use-package lsp-haskell
+;;   :ensure t
+;;   :config
+;;  (setq lsp-haskell-server-path "haskell-language-server-wrapper")
+;;  (setq lsp-haskell-server-args ())
+;;    ;; Comment/uncomment this line to see interactions between lsp client/server.
+;;   (setq lsp-log-io t))
+
+(add-hook 'haskell-mode-hook #'lsp)
+(add-hook 'haskell-literate-mode-hook #'lsp)
 
 ;;; C
 (setq c-default-style "linux"
@@ -212,7 +248,7 @@
   (setq gofmt-command "goimports"))
 
 ;;; erc
-(use-package tls)
+;; (use-package tls)
 (use-package erc
   :init
   (load "~/secrets/ercpass.el")
@@ -353,10 +389,9 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(org-agenda-files (quote ("~/src/org/todo.org")))
+ '(lsp-ui-doc-show-with-cursor nil)
  '(package-selected-packages
-   (quote
-    (color-theme-sanityinc-tomorrow csharp-mode agda-mode restclient rest-client attrap deferred nix-mode org-tree-slide tuareg idris-mode org-journal go-mode dante haskell-mode magit cargo flycheck-rust flycheck racer nov dumb-jump which-key company exec-path-from-shell projectile use-package))))
+   '(lsp-treemacs lsp-ui elfeed-org elfeed flycheck-haskell elpher frame-purpose rainbow-identifiers tracking ov a request anaphora quelpa-use-package quelpa tls org-tree-slide tuareg idris-mode org-journal go-mode dante haskell-mode magit cargo flycheck racer nov dumb-jump which-key company exec-path-from-shell projectile use-package)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -366,3 +401,58 @@
 
 (load-file (let ((coding-system-for-read 'utf-8))
                 (shell-command-to-string "agda-mode locate")))
+
+;; UTF-8 support
+(prefer-coding-system       'utf-8)
+(set-default-coding-systems 'utf-8)
+(set-terminal-coding-system 'utf-8)
+(set-keyboard-coding-system 'utf-8)
+(setq x-select-request-type '(UTF8_STRING COMPOUND_TEXT TEXT STRING))
+
+;; matrix client
+(add-to-list 'load-path (expand-file-name "matrix-client.el" user-emacs-directory))
+(require-package 'anaphora)
+(require-package 'dash)
+(require-package 'dash-functional)
+(require-package 'f)
+(require-package 'request)
+(require-package 'a)
+(require-package 'ov)
+(require-package 's)
+(require-package 'tracking)
+(require-package 'esxml)
+(require-package 'ht)
+(require-package 'rainbow-identifiers)
+(require-package 'frame-purpose)
+
+(require 'matrix-client)
+
+;; align expressions at '='
+(defun align-on-equals ()
+  (interactive)
+  (save-excursion
+    (mark-paragraph)
+    (align-regexp (point) (mark) "\\(\\s-*\\)=")))
+
+(global-set-key (kbd "C-=") 'align-on-equals)
+
+;; wasm text based format
+(add-to-list 'load-path (expand-file-name "wat-mode" user-emacs-directory))
+(require 'wat-mode)
+
+;; agda
+;; auto-load agda-mode for .agda and .lagda.md
+(setq auto-mode-alist
+      (append
+       '(("\\.agda\\'" . agda2-mode)
+         ("\\.lagda.md\\'" . agda2-mode))
+       auto-mode-alist))
+
+;; agda2-mode hook
+(defun my-agda-hook ()
+  (set-input-method 'Agda))
+
+(add-hook 'agda2-mode-hook 'my-agda-hook)
+
+(when (daemonp)
+  (exec-path-from-shell-initialize))
