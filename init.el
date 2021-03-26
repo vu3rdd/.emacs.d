@@ -1,4 +1,4 @@
-;;; emacs-lisp
+;;; emacs-lisp --- ram:
 ;; no longer needed on emacs27
 ;;(package-initialize)
 
@@ -108,13 +108,13 @@
 ;;; misc
 (use-package exec-path-from-shell)
 
-(use-package company
-  :init
-  (add-hook 'after-init-hook 'global-company-mode)
-  :config
-  (setq company-minimum-prefix-length 1
-        company-idle-delay 0.2) ;; default is 0.2
-  )
+;; (use-package company
+;;   :init
+;;   (add-hook 'after-init-hook 'global-company-mode)
+;;   :config
+;;   (setq company-minimum-prefix-length 1
+;;         company-idle-delay 0.0) ;; default is 0.2
+;;   )
 
 (use-package which-key
   :config
@@ -176,28 +176,33 @@
   (setq magit-diff-refine-hunk 'all))
 
 
-;;; haskell
-;; (use-package flycheck-haskell
+;; ;;; haskell
+;; ;; (use-package flycheck-haskell
+;; ;;   :init
+;; ;;   (add-hook 'haskell-mode-hook #'flycheck-haskell-setup))
+
+;; (use-package lsp-mode
+;;   :ensure t
 ;;   :init
-;;   (add-hook 'haskell-mode-hook #'flycheck-haskell-setup))
+;;   (setq lsp-keymap-prefix "C-c l")
+;;   :hook ((haskell-mode . (lsp lsp-deferred))
+;;          (go-mode . lsp)
+;;          (lsp-mode . lsp-enable-which-key-integration))
+;;   :commands (lsp lsp-deferred))
 
-(use-package lsp-mode
-  :ensure t
-  :init
-  (setq lsp-keymap-prefix "C-c l")
-  :hook ((haskell-mode . (lsp lsp-deferred))
-         (go-mode . lsp)
-         (lsp-mode . lsp-enable-which-key-integration))
-  :commands (lsp lsp-deferred))
+;; (use-package lsp-ui
+;;   :ensure t
+;;   :after (lsp-mode)
+;;   :hook ((lsp-mode . lsp-ui-mode)
+;;          (lsp-mode . flycheck-mode))
+;;   :config
+;;   (setq lsp-prefer-flymake nil)
+;;   :commands lsp-ui-mode)
 
-(use-package lsp-ui
+(use-package eglot
   :ensure t
-  :after (lsp-mode)
-  :hook ((lsp-mode . lsp-ui-mode)
-         (lsp-mode . flycheck-mode))
   :config
-  (setq lsp-prefer-flymake nil)
-  :commands lsp-ui-mode)
+  (add-to-list 'eglot-server-programs '(haskell-mode . ("haskell-language-server-wrapper" "--lsp"))))
 
 (use-package haskell-mode
   :ensure t
@@ -206,6 +211,7 @@
     (add-hook 'haskell-mode-hook 'turn-on-haskell-doc-mode)
     (add-hook 'haskell-mode-hook 'turn-on-haskell-indent)
     (add-hook 'haskell-mode-hook 'interactive-haskell-mode)
+    (add-hook 'haskell-mode-hook 'eglot-ensure)
     (setq haskell-process-args-cabal-new-repl
 	  '("--ghc-options=-ferror-spans -fshow-loaded-modules"))
     (setq haskell-process-type 'cabal-new-repl)
@@ -214,24 +220,62 @@
     (setq haskell-tags-on-save 't)
     ))
 
-(require 'lsp)
-(use-package lsp-haskell
- :ensure t
- :config
- (setq lsp-haskell-process-path-hie "haskell-language-server-wrapper")
- (setq lsp-log-io t)
- )
+;;; use flycheck instead of flymake (to avoid process flood)
+(use-package flycheck)
+;; https://gist.github.com/purcell/ca33abbea9a98bb0f8a04d790a0cadcd
+(defvar-local flycheck-eglot-current-errors nil)
 
+(defun flycheck-eglot-report-fn (diags &rest _)
+  (setq flycheck-eglot-current-errors
+        (mapcar (lambda (diag)
+                  (save-excursion
+                    (goto-char (flymake--diag-beg diag))
+                    (flycheck-error-new-at (line-number-at-pos)
+                                           (1+ (- (point) (line-beginning-position)))
+                                           (pcase (flymake--diag-type diag)
+                                             ('eglot-error 'error)
+                                             ('eglot-warning 'warning)
+                                             ('eglot-note 'info)
+                                             (_ (error "Unknown diag type, %S" diag)))
+                                           (flymake--diag-text diag)
+                                           :checker 'eglot)))
+                diags))
+  (flycheck-buffer))
+
+(defun flycheck-eglot--start (checker callback)
+  (funcall callback 'finished flycheck-eglot-current-errors))
+
+(defun flycheck-eglot--available-p ()
+  (bound-and-true-p eglot--managed-mode))
+
+(flycheck-define-generic-checker 'eglot
+  "Report `eglot' diagnostics using `flycheck'."
+  :start #'flycheck-eglot--start
+  :predicate #'flycheck-eglot--available-p
+  :modes '(prog-mode text-mode))
+
+(push 'eglot flycheck-checkers)
+
+(defun sanityinc/eglot-prefer-flycheck ()
+  (when eglot--managed-mode
+    (flycheck-add-mode 'eglot major-mode)
+    (flycheck-select-checker 'eglot)
+    (flycheck-mode)
+    (flymake-mode -1)
+    (setq eglot--current-flymake-report-fn 'flycheck-eglot-report-fn)))
+
+(add-hook 'eglot--managed-mode-hook 'sanityinc/eglot-prefer-flycheck)
+
+;; (require 'lsp)
 ;; (use-package lsp-haskell
-;;   :ensure t
-;;   :config
-;;  (setq lsp-haskell-server-path "haskell-language-server-wrapper")
-;;  (setq lsp-haskell-server-args ())
-;;    ;; Comment/uncomment this line to see interactions between lsp client/server.
-;;   (setq lsp-log-io t))
+;;  :ensure t
+;;  :config
+;;  (setq lsp-haskell-process-path-hie "haskell-language-server-wrapper")
+;;  (setq lsp-log-io t)
+;;  )
 
-(add-hook 'haskell-mode-hook #'lsp)
-(add-hook 'haskell-literate-mode-hook #'lsp)
+; (add-hook 'haskell-mode-hook #'lsp)
+; (add-hook 'haskell-literate-mode-hook #'lsp)
 
 ;;; C
 (setq c-default-style "linux"
@@ -389,9 +433,10 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(lsp-ui-doc-show-with-cursor nil)
+ '(blink-cursor-mode nil)
+ '(cursor-type '(bar . 2))
  '(package-selected-packages
-   '(lsp-treemacs lsp-ui elfeed-org elfeed flycheck-haskell elpher frame-purpose rainbow-identifiers tracking ov a request anaphora quelpa-use-package quelpa tls org-tree-slide tuareg idris-mode org-journal go-mode dante haskell-mode magit cargo flycheck racer nov dumb-jump which-key company exec-path-from-shell projectile use-package)))
+   '(ht eglot elfeed-org elfeed flycheck-haskell elpher frame-purpose rainbow-identifiers tracking ov a request anaphora quelpa-use-package quelpa tls org-tree-slide tuareg idris-mode org-journal go-mode dante haskell-mode magit cargo flycheck racer nov dumb-jump which-key company exec-path-from-shell projectile use-package)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
