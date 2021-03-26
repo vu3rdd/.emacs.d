@@ -65,9 +65,6 @@
 (set-cursor-color "#ff0000")
 (setq ring-bell-function 'ignore)
 
-;;; font
-(set-default-font "DejaVu Sans Mono-11")
-
 ;; python mode
 (defun my-python-hook ()
   (define-key python-mode-map (kbd "RET") 'newline-and-indent))
