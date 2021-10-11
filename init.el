@@ -512,24 +512,6 @@
 (set-keyboard-coding-system 'utf-8)
 (setq x-select-request-type '(UTF8_STRING COMPOUND_TEXT TEXT STRING))
 
-;; matrix client
-(add-to-list 'load-path (expand-file-name "matrix-client.el" user-emacs-directory))
-(require-package 'anaphora)
-(require-package 'dash)
-(require-package 'dash-functional)
-(require-package 'f)
-(require-package 'request)
-(require-package 'a)
-(require-package 'ov)
-(require-package 's)
-(require-package 'tracking)
-(require-package 'esxml)
-(require-package 'ht)
-(require-package 'rainbow-identifiers)
-(require-package 'frame-purpose)
-
-(require 'matrix-client)
-
 ;; align expressions at '='
 (defun align-on-equals ()
   (interactive)
@@ -538,10 +520,6 @@
     (align-regexp (point) (mark) "\\(\\s-*\\)=")))
 
 (global-set-key (kbd "C-=") 'align-on-equals)
-
-;; wasm text based format
-(add-to-list 'load-path (expand-file-name "wat-mode" user-emacs-directory))
-(require 'wat-mode)
 
 ;; agda
 ;; auto-load agda-mode for .agda and .lagda.md
