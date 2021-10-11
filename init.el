@@ -1,6 +1,45 @@
 ;;; emacs-lisp --- ram:
 ;; no longer needed on emacs27
 ;;(package-initialize)
+(require 'package)
+
+;;; ui bits
+(setq inhibit-startup-message t)
+(menu-bar-mode -1)
+(when (fboundp 'tool-bar-mode)
+  (tool-bar-mode -1))
+(when (fboundp 'scroll-bar-mode)
+  (scroll-bar-mode -1))
+
+(setq x-select-enable-clipboard t
+      x-select-enable-primary t
+      save-interprogram-paste-before-kill t
+      apropos-do-all t
+      mouse-yank-at-point t
+      column-number-mode t
+      ns-command-modifier 'meta
+      initial-frame-alist '((fullscreen . maximized)))
+
+(global-linum-mode t)
+(blink-cursor-mode 0)
+(setq-default cursor-type '(bar . 2))
+(set-cursor-color "#ff0000")
+(setq ring-bell-function 'ignore)
+
+;; set title
+;; (setq frame-title-format
+;;   (concat "%b - emacs@" (system-name)))
+;; (setq-default frame-title-format '("%f [%m]"))
+(setq frame-title-format "emacs")
+
+;;; font
+;; (set-default-font "DejaVu Sans Mono-13")
+;; (set-face-attribute 'default t :font "DejaVu Sans Mono-16")
+(set-face-attribute 'default nil
+		    :family "DejaVu Sans Mono"
+		    :height 105
+		    :weight 'normal
+		    :width  'normal)
 
 (add-to-list 'load-path (expand-file-name "lisp" user-emacs-directory))
 
@@ -69,13 +108,13 @@
 (defun my-python-hook ()
   (define-key python-mode-map (kbd "RET") 'newline-and-indent))
 
+; XXX add "fill-paragragh" (M-q) hook
 (add-hook 'python-mode-hook 'my-python-hook)
 (add-hook 'python-mode-hook 'electric-indent-mode)
 
 
-;; theme
-;; (add-to-list 'custom-theme-load-path "~/.emacs.d/themes")
-;; (load-theme 'acme t)
+(add-to-list 'custom-theme-load-path "~/.emacs.d/themes")
+(load-theme 'acme t)
 
 ;; encoding
 (setq default-process-coding-system '(utf-8-unix . utf-8-unix))
@@ -299,11 +338,12 @@
   (erc-autojoin-mode)
   (setq erc-prompt-for-nickserv-password nil)
   (setq erc-nickserv-passwords
-        `((freenode     (("rkrishnan" . ,freenode-rkrishnan-pass)))))
+        `((libera     (("rkrishnan" . ,libera-rkrishnan-pass)))))
   (setq erc-autojoin-channels-alist
         '(;; (".*\\.freenode.net" "#haskell" "#tahoe-lafs" "#magic-wormhole")
           ;; (".*\\.oftc.net" "#leastauthority")
           ;; (".*\\.mozilla.org" "#rust-beginners")
+          (".*\\.libera.chat" "#haskell" "#tahoe-lafs" "#magic-wormhole")
           ))
   ;; check channels
   (erc-track-mode t)
@@ -315,7 +355,8 @@
     "Connect to IRC."
     (interactive)
     (when (y-or-n-p "Do you want to start IRC? ")
-      (erc-tls :server "rkrishnan.org" :port 6697 :nick "rkrishnan" :password znc-pass)))
+      (erc-tls :server "irc.libera.chat" :port 6697 :nick "rkrishnan" :full-name "Ramakrishnan Muthukrishnan")))
+      ;; (erc-tls :server "rkrishnan.org" :port 6697 :nick "rkrishnan" :password znc-pass)))
       ;; (erc-tls :server "irc.mozilla.org" :port 6697 :nick "rkrishnan" :full-name "Ramakrishnan Muthukrishnan")
       ;; (erc-tls :server "irc.freenode.net" :port 6697 :nick "rkrishnan" :full-name "Ramakrishnan Muthukrishnan")))
   ;; (erc-tls :server "irc.oftc.net" :port 6697 :nick "rkrishnan" :full-name "Ramakrishnan Muthukrishnan")))
@@ -415,25 +456,45 @@
 (use-package deferred)
 
 ;; c# mode
-(use-package csharp-mode)
+;; (use-package csharp-mode)
+
+;; python docstring
+(use-package python-docstring)
+
+;; agda-mode
+(setq auto-mode-alist
+   (append
+     '(("\\.agda\\'" . agda2-mode)
+       ("\\.lagda.md\\'" . agda2-mode))
+     auto-mode-alist))
 
 ;; mononoki font
 ;; default to mononoki
-(set-face-attribute 'default nil
-		    :family "mononoki"
-		    :height 120
-		    :weight 'normal
-		    :width  'normal)
+;; (set-face-attribute 'default nil
+;; 		    :family "mononoki"
+;; 		    :height 120
+;; 		    :weight 'normal
+;; 		    :width  'normal)
+
+(use-package mastodon
+  :ensure t
+  :config
+  (setq mastodon-instance-url "https://mastodon.radio")
+  (setq mastodon-auth-source "~/authinfo")
+  )
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(blink-cursor-mode nil)
- '(cursor-type '(bar . 2))
+ '(custom-safe-themes
+   '("bb08c73af94ee74453c90422485b29e5643b73b05e8de029a6909af6a3fb3f58" default))
+ '(org-agenda-files '("~/src/org/todo.org"))
  '(package-selected-packages
-   '(ht eglot elfeed-org elfeed flycheck-haskell elpher frame-purpose rainbow-identifiers tracking ov a request anaphora quelpa-use-package quelpa tls org-tree-slide tuareg idris-mode org-journal go-mode dante haskell-mode magit cargo flycheck racer nov dumb-jump which-key company exec-path-from-shell projectile use-package)))
+   '(elpher tls mastodon python-docstring-mode python-docstring color-theme-sanityinc-tomorrow csharp-mode agda-mode restclient rest-client attrap deferred nix-mode org-tree-slide tuareg idris-mode org-journal go-mode dante haskell-mode magit cargo flycheck-rust flycheck racer nov dumb-jump which-key company exec-path-from-shell projectile use-package))
+ '(verilog-auto-indent-on-newline t)
+ '(verilog-auto-newline nil))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
