@@ -415,13 +415,6 @@
 ;; 		    :weight 'normal
 ;; 		    :width  'normal)
 
-(use-package mastodon
-  :ensure t
-  :config
-  (setq mastodon-instance-url "https://mastodon.radio")
-  (setq mastodon-auth-source "~/authinfo")
-  )
-
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
