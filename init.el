@@ -289,7 +289,7 @@
   (erc-autojoin-mode)
   (setq erc-prompt-for-nickserv-password nil)
   (setq erc-nickserv-passwords
-        `((libera     (("rkrishnan" . ,libera-rkrishnan-pass)))))
+        `((libera     ((,libera-username1 . ,libera-user1-pass)))))
   (setq erc-autojoin-channels-alist
         '((".*\\.libera.chat" "#haskell" "#tahoe-lafs" "#magic-wormhole")
           ))
