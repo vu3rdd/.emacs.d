@@ -394,11 +394,6 @@
 (use-package nix-mode
   :mode "\\.nix\\'")
 
-(load "~/.emacs.d/elisp/michelson-mode.el" nil t)
-
-;; michelson mode
-(use-package deferred)
-
 ;; c# mode
 ;; (use-package csharp-mode)
 
