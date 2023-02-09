@@ -45,7 +45,6 @@
 
 ;; .el files not obtainable from pkg manager
 (add-to-list 'load-path (expand-file-name "elisp" user-emacs-directory))
-(add-to-list 'load-path (expand-file-name "elisp/wat-mode" user-emacs-directory))
 
 (load "~/.emacs.d/early-init.el")
 
@@ -460,4 +459,3 @@
 (when (daemonp)
   (exec-path-from-shell-initialize))
 
-(require 'wat-mode)
