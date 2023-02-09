@@ -20,7 +20,7 @@
       ns-command-modifier 'meta
       initial-frame-alist '((fullscreen . maximized)))
 
-(global-linum-mode t)
+;; (global-linum-mode t)
 (blink-cursor-mode 0)
 (setq-default cursor-type '(bar . 2))
 (set-cursor-color "#ff0000")
@@ -45,6 +45,7 @@
 
 ;; .el files not obtainable from pkg manager
 (add-to-list 'load-path (expand-file-name "elisp" user-emacs-directory))
+(add-to-list 'load-path (expand-file-name "elisp/wat-mode" user-emacs-directory))
 
 (load "~/.emacs.d/early-init.el")
 
@@ -69,6 +70,10 @@
 (package-initialize)
 
 ;;; use-package
+(unless (package-installed-p 'use-package)
+  (package-refresh-contents)
+  (package-install 'use-package))
+
 (require-package 'use-package)
 (setq use-package-always-ensure t)
 
@@ -185,12 +190,12 @@
     (exec-path-from-shell-initialize)
     (setq exec-path-from-shell-check-startup-files nil)))
 
-(use-package flycheck
-  :ensure t
-  :init
-  (global-flycheck-mode t))
-(use-package yasnippet
-  :ensure t)
+;; (use-package flycheck
+;;   :ensure t
+;;   :init
+;;   (global-flycheck-mode t))
+;; (use-package yasnippet
+;;   :ensure t)
 
 ;;; rust mode
 (use-package cargo)
@@ -199,10 +204,17 @@
   (add-hook 'rust-mode-hook  #'company-mode)
   (add-hook 'racer-mode-hook #'eldoc-mode)
   (add-hook 'rust-mode-hook 'cargo-minor-mode)
+  (add-hook 'rust-mode-hook #'lsp)
   (add-hook 'rust-mode-hook
             '(lambda ()
+               (setq indent-tabs-mode nil)
                (local-set-key (kbd "TAB") #'company-indent-or-complete-common)
                (electric-pair-mode 1))))
+
+;; eglot
+(use-package eglot
+  :init
+  (add-hook 'rust-mode-hook 'eglot-ensure))
 
 ;;;  magit
 (use-package magit
@@ -210,30 +222,6 @@
   (global-set-key (kbd "C-x g") 'magit-status)
   :config
   (setq magit-diff-refine-hunk 'all))
-
-
-;; ;;; haskell
-;; (use-package flycheck-haskell
-;;   :init
-;;   (add-hook 'haskell-mode-hook #'flycheck-haskell-setup))
-
-(use-package lsp-mode
-  :ensure t
-  :init
-  (setq lsp-keymap-prefix "C-c l")
-  :hook ((haskell-mode . (lsp lsp-deferred))
-         (go-mode . lsp)
-         (lsp-mode . lsp-enable-which-key-integration))
-  :commands (lsp lsp-deferred))
-
-(use-package lsp-ui
-  :ensure t
-  :after (lsp-mode)
-  :hook ((lsp-mode . lsp-ui-mode)
-         (lsp-mode . flycheck-mode))
-  :config
-  (setq lsp-prefer-flymake nil)
-  :commands lsp-ui-mode)
 
 (use-package haskell-mode
   :ensure t
@@ -356,10 +344,14 @@
 
 (use-package org-journal
   :requires org
+  :init
+  (setq org-journal-prefix-key "C-c j ")
   :config
-  (setq org-journal-dir "~/projects/journal/")
-  (setq org-journal-file-format "%Y-%m-%d.org")
-  (setq org-journal-enable-agenda-integration t))
+  (setq org-journal-dir "~/projects/journal/"
+        org-journal-file-format "%Y-%m.org"
+        org-journal-file-type 'monthly
+        org-journal-date-format "%A, %d %B %Y"
+        org-journal-enable-agenda-integration t))
 
 (use-package restclient)
 
@@ -420,13 +412,11 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(custom-safe-themes
-   '("bb08c73af94ee74453c90422485b29e5643b73b05e8de029a6909af6a3fb3f58" default))
- '(org-agenda-files '("~/src/org/todo.org"))
+ '(lsp-ui-doc-show-with-cursor nil)
+ '(org-agenda-files '("/home/ram/projects/journal/2022-06.org"))
  '(package-selected-packages
-   '(elpher tls mastodon python-docstring-mode python-docstring color-theme-sanityinc-tomorrow csharp-mode agda-mode restclient rest-client attrap deferred nix-mode org-tree-slide tuareg idris-mode org-journal go-mode dante haskell-mode magit cargo flycheck-rust flycheck racer nov dumb-jump which-key company exec-path-from-shell projectile use-package))
- '(verilog-auto-indent-on-newline t)
- '(verilog-auto-newline nil))
+   '(eglot helm-core lsp-haskell popup python-docstring cmake-mode rustic lsp-treemacs lsp-ui elfeed-org elfeed flycheck-haskell elpher frame-purpose rainbow-identifiers tracking ov a request anaphora quelpa-use-package quelpa tls org-tree-slide idris-mode org-journal go-mode dante haskell-mode magit cargo flycheck racer nov company exec-path-from-shell projectile)))
+
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -469,3 +459,5 @@
 
 (when (daemonp)
   (exec-path-from-shell-initialize))
+
+(require 'wat-mode)

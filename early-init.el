@@ -6,7 +6,8 @@
 (when (fboundp 'scroll-bar-mode)
   (scroll-bar-mode -1))
 
-(global-linum-mode t)
+;; (global-linum-mode t)
+(global-display-line-numbers-mode)
 
 ;; font
 (cond ((find-font (font-spec :name "Noto Mono"))
